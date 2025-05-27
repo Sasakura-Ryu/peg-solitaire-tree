@@ -193,6 +193,8 @@ export default function PegSolitaire() {
           <button className="move-button" onClick={startGame} disabled={initialPegs.size === 0}>ゲーム開始</button>
           <button className="move-button" onClick={() => applyMove(legal[0])} disabled={legal.length === 0 || solving}>自動一手</button>
           <button className="move-button" onClick={autoClear} disabled={solving || history.length === 0}>自動クリア</button>
+          <button className="move-button" onClick={() => { if (idx > 0) setIdx(idx - 1); }} disabled={idx === 0}>⬅️ 戻る</button>
+          <button className="move-button" onClick={() => { if (idx < history.length - 1) setIdx(idx + 1); }} disabled={idx >= history.length - 1}>進む ➡️</button>
         </div>
 
         {history.length > 0 && (
