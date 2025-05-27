@@ -153,7 +153,7 @@ export default function PegSolitaire() {
   };
 
   return (
-    <div style={{ display: "flex", padding: "1rem", justifyContent: "center" }}>
+    <div style={{ display: "flex", flexDirection: "column", padding: "1rem", alignItems: "center" }}>
       <div style={{ textAlign: "center" }}>
         <h2>盤面パターン選択</h2>
         <select value={patternKey} onChange={(e) => {
@@ -233,7 +233,7 @@ export default function PegSolitaire() {
       </div>
 
       {history.length > 0 && (
-        <div style={{ marginLeft: "2rem" }}>
+        <div style={{ marginTop: "2rem" }}>
           <h3>履歴：</h3>
           <ol>
             {history.map((h, i) => (
