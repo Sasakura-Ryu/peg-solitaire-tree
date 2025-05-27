@@ -1,0 +1,49 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(7, 40px);
+  gap: 4px;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.peg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+  cursor: default;
+}
+
+.peg.active {
+  background-color: steelblue;
+  color: white;
+}
+
+.move-button {
+  margin: 3px;
+  padding: 5px 10px;
+  background-color: #ddf;
+  border: 1px solid #99c;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.move-button:hover {
+  background-color: #cce;
+}
+
+h2 {
+  font-size: 18px;
+  margin: 1rem 0 0.5rem;
+}
+
+h3 {
+  font-size: 16px;
+  margin-top: 2rem;
+}
