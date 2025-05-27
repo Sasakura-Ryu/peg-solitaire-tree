@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/peg-solitaire-tree/static/css/main.9399eda1.css",
+    "main.js": "/peg-solitaire-tree/static/js/main.91e08d24.js",
+    "static/js/453.85b19eb7.chunk.js": "/peg-solitaire-tree/static/js/453.85b19eb7.chunk.js",
+    "index.html": "/peg-solitaire-tree/index.html",
+    "main.9399eda1.css.map": "/peg-solitaire-tree/static/css/main.9399eda1.css.map",
+    "main.91e08d24.js.map": "/peg-solitaire-tree/static/js/main.91e08d24.js.map",
+    "453.85b19eb7.chunk.js.map": "/peg-solitaire-tree/static/js/453.85b19eb7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9399eda1.css",
+    "static/js/main.91e08d24.js"
+  ]
+}
