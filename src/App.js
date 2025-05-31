@@ -1,4 +1,4 @@
-/* global BigInt */
+// PegSolitaire with BigInt memo key optimization
 import { useState, useMemo } from "react";
 import "./App.css";
 
@@ -18,8 +18,8 @@ function generateCenteredLayout(shape) {
 }
 
 const PATTERNS = {
-  "Plus 33": generateCenteredLayout([3,3,7,7,7,3,3]),
-  "Diamond 37": generateCenteredLayout([3,5,7,7,7,5,3]),
+  "Plus 33": generateCenteredLayout([3, 3, 7, 7, 7, 3, 3]),
+  "Diamond 37": generateCenteredLayout([3, 5, 7, 7, 7, 5, 3]),
   "Square 49": Array.from({ length: 7 }, (_, r) =>
     Array.from({ length: 7 }, (_, c) => r * 7 + c + 1)
   ),
@@ -44,6 +44,7 @@ function getLegalMoves(pegs, layout) {
       if (cell != null) posToRC[cell] = [r, c];
     });
   });
+
   for (const f of pegs) {
     const [r, c] = posToRC[f];
     for (const [dr, dc] of DIRS) {
@@ -70,11 +71,18 @@ function apply(pegs, [f, o, t]) {
   return s;
 }
 
+function toBigIntKey(pegs) {
+  let key = 0n;
+  for (const p of pegs) {
+    key |= 1n << BigInt(p);
+  }
+  return key;
+}
+
 function solve(initial, layout, goalPos = null) {
   const memo = new Map();
-  const key = (s) => Array.from(s).sort((a, b) => a - b).join(",");
   const dfs = (state) => {
-    const k = key(state);
+    const k = toBigIntKey(state);
     if (memo.has(k)) return memo.get(k);
     if (state.size === 1) {
       const only = state.values().next().value;
@@ -100,7 +108,7 @@ export default function PegSolitaire() {
   const [patternKey, setPatternKey] = useState("Plus 33");
   const layout = PATTERNS[patternKey];
   const cells = flatten(layout);
-  const [initialPegs, setInitialPegs] = useState(new Set(flatten(layout)));
+  const [initialPegs, setInitialPegs] = useState(new Set(cells));
   const [history, setHistory] = useState([]);
   const [idx, setIdx] = useState(0);
   const [solving, setSolving] = useState(false);
@@ -196,7 +204,7 @@ export default function PegSolitaire() {
         </div>
 
         {history.length > 0 && (
-          <div>
+          <>
             <h2 style={{ marginTop: "1rem" }}>盤面</h2>
             <div className="board">
               {layout.map((row, ri) => (
@@ -228,7 +236,7 @@ export default function PegSolitaire() {
                 ))}
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
 
