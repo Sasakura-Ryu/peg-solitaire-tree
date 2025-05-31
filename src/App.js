@@ -1,6 +1,4 @@
-// PegSolitaire with BigInt-safe solve function (ES2020 compatible)
-/* eslint-env es2020 */
-
+/* global BigInt */
 import { useState, useMemo } from "react";
 import "./App.css";
 
@@ -30,7 +28,9 @@ const PATTERNS = {
   )
 };
 
-const DIRS = [ [0, 1], [0, -1], [1, 0], [-1, 0] ];
+const DIRS = [
+  [0, 1], [0, -1], [1, 0], [-1, 0]
+];
 
 function flatten(pattern) {
   return pattern.flat().filter(x => x != null);
@@ -48,7 +48,10 @@ function getLegalMoves(pegs, layout) {
     const [r, c] = posToRC[f];
     for (const [dr, dc] of DIRS) {
       const r1 = r + dr, c1 = c + dc, r2 = r + 2 * dr, c2 = c + 2 * dc;
-      if (layout[r1]?.[c1] != null && layout[r2]?.[c2] != null) {
+      if (
+        layout[r1] && layout[r1][c1] != null &&
+        layout[r2] && layout[r2][c2] != null
+      ) {
         const o = layout[r1][c1], t = layout[r2][c2];
         if (pegs.has(o) && !pegs.has(t)) {
           moves.push([f, o, t]);
@@ -67,21 +70,11 @@ function apply(pegs, [f, o, t]) {
   return s;
 }
 
-function stateToKey(state, maxCell) {
-  let bit = 0n;
-  for (let i = 1; i <= maxCell; i++) {
-    if (state.has(i)) {
-      bit |= 1n << BigInt(i);
-    }
-  }
-  return bit.toString();
-}
-
 function solve(initial, layout, goalPos = null) {
   const memo = new Map();
-  const maxCell = Math.max(...flatten(layout));
+  const key = (s) => Array.from(s).sort((a, b) => a - b).join(",");
   const dfs = (state) => {
-    const k = stateToKey(state, maxCell);
+    const k = key(state);
     if (memo.has(k)) return memo.get(k);
     if (state.size === 1) {
       const only = state.values().next().value;
@@ -198,6 +191,8 @@ export default function PegSolitaire() {
           <button className="move-button" onClick={startGame} disabled={initialPegs.size === 0}>ゲーム開始</button>
           <button className="move-button" onClick={() => applyMove(legal[0])} disabled={legal.length === 0 || solving}>自動一手</button>
           <button className="move-button" onClick={autoClear} disabled={solving || history.length === 0}>自動クリア</button>
+          <button className="move-button" onClick={() => { if (idx > 0) setIdx(idx - 1); }} disabled={idx === 0}>⬅️ 戻る</button>
+          <button className="move-button" onClick={() => { if (idx < history.length - 1) setIdx(idx + 1); }} disabled={idx >= history.length - 1}>進む ➡️</button>
         </div>
 
         {history.length > 0 && (
@@ -223,7 +218,11 @@ export default function PegSolitaire() {
             ) : (
               <div>
                 {legal.map((m, i) => (
-                  <button key={i} className="move-button" onClick={() => applyMove(m)}>
+                  <button
+                    key={i}
+                    className="move-button"
+                    onClick={() => applyMove(m)}
+                  >
                     {m[0]} → {m[1]} → {m[2]}
                   </button>
                 ))}
@@ -231,20 +230,20 @@ export default function PegSolitaire() {
             )}
           </div>
         )}
-
-        {history.length > 0 && (
-          <div style={{ marginTop: "2rem" }}>
-            <h3>履歴：</h3>
-            <ol>
-              {history.map((h, i) => (
-                <li key={i} style={{ fontWeight: i === idx ? "bold" : "normal" }}>
-                  {h.move ? `${h.move[0]}→${h.move[1]}→${h.move[2]}` : "[開始]"}
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
       </div>
+
+      {history.length > 0 && (
+        <div style={{ marginTop: "2rem" }}>
+          <h3>履歴：</h3>
+          <ol>
+            {history.map((h, i) => (
+              <li key={i} style={{ fontWeight: i === idx ? "bold" : "normal" }}>
+                {h.move ? `${h.move[0]}→${h.move[1]}→${h.move[2]}` : "[開始]"}
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
     </div>
   );
 }
